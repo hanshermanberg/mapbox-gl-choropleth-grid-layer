@@ -1,0 +1,41 @@
+{
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+      "@typescript-eslint/naming-convention": [
+        "warn",
+        {
+          "selector": "memberLike",
+          "modifiers": ["private"],
+          "format": ["camelCase"],
+          "leadingUnderscore": "require"
+        },
+        {
+          "selector": "memberLike",
+          "modifiers": ["public"],
+          "format": ["camelCase"],
+          "leadingUnderscore": "forbid"
+        }
+      ],
+      "arrow-spacing": ["warn", { "before": true, "after": true }],
+      "brace-style": ["warn", "1tbs", { "allowSingleLine": false }],
+      "curly": "warn",
+      "eqeqeq": "error",
+      "indent": ["warn", 4, { "SwitchCase": 1 }],
+      "linebreak-style": ["error", "windows"],
+      "no-async-promise-executor": "warn",
+      "no-console": "off",
+      "no-debugger": "warn",
+      "no-eval": "error",
+      "no-extend-native": "warn",
+      "no-var": "error",
+      "prefer-const": "warn",
+      "quotes": ["warn", "double", { "allowTemplateLiterals": true }],
+      "semi": ["warn", "always"]
+    }
+  }
