@@ -1,8 +1,10 @@
 import mapboxgl, { CustomLayerInterface, MercatorCoordinate } from "mapbox-gl";
 
+type RGBA = [number, number, number, number];
+
 interface IChoroplethGridLayerData<T> {
     dataArray: T[][],
-    getColor: (d: T) => [number, number, number, number];
+    getColor: (d: T) => RGBA;
     stepSize: { lng: number, lat: number };
     offset: { lng: number, lat: number };
 }
@@ -179,24 +181,20 @@ export function createLayer<T>(data: IChoroplethGridLayerData<T>, options: IGeoC
             ]);
 
             // Prepare grid texture color data
-            const transposed: [number, number, number, number][][] = [];
-            for (let i = 0; i < gridSize.x; i++) {
-                const row: [number, number, number, number][] = [];
-                for (let j = 0; j < gridSize.y; j++) {
-                    const gridJ = colorGrid[j];
-                    if(gridJ === undefined) {
-                        throw new Error("Row in color matrix was null."); 
-                    }
-                    const gridJI = gridJ[i];
-                    if(gridJI === undefined) {
-                        throw new Error("Cell in color matrix was null."); 
-                    }
-                    row.push(gridJI);
-                }
-                transposed.push(row);
-            }
+            const colorGridFirstRow = colorGrid[0] as RGBA[];
+            const transposed = colorGridFirstRow.map((_, i) => colorGrid.map(row => row[i]));
             transposed.reverse();
-            const gridData = new Uint8Array(transposed.flat().flat());
+            const flat: number[] = [];
+            transposed.map(row => {
+                (row as RGBA[]).map(item => {
+                    flat.push(...item);
+                });
+            });
+            const gridData = new Uint8Array(flat);
+
+            if(gridSize.x * gridSize.y * 4 !== gridData.length) {
+                throw new Error(`Color matrix size (${gridSize.x * gridSize.y * 4}) does not match color matrix size (${gridData.length}) after transpose.`);
+            }
 
             // Create texture with grid color data
             tGrid = gl.createTexture() as WebGLTexture;
