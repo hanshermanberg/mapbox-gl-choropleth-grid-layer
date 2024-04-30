@@ -2,7 +2,7 @@
 Custom layer for mapbox-gl that efficiently displays large sets of world space data as a grid of colors.
 [View demo](https://ptnoavailability.z1.web.core.windows.net)
 
-![alt text](./images/demo.png)
+![alt text](https://hermanberg.com/images/thumbnails/ptnoavailability.png)
 
 # Features
 * Display data in world coordinates (latitide and longitude)
@@ -18,11 +18,13 @@ Custom layer for mapbox-gl that efficiently displays large sets of world space d
 ```typescript
 // Create an instance of the layer
 const gridLayer = createLayer({
+    // Your data in a 2D array
     dataGrid: [
         [1, 1, 2]
         [1, 2, 3]
         [2, 3, 3]
     ],
+    // Function that returns a color for each cell in the grid
     getColor: x => {
         switch(x) {
             case 1: return [255, 0, 0, 255];
@@ -31,14 +33,17 @@ const gridLayer = createLayer({
             default: return [0, 0, 0, 0];
         }
     },
+    // The world space size of each cell in the grid
     stepSize: {
         lat: 0.1,
         lng: 0.1
     },
+    // The origin of the grid in world space (south west)
     offset: {
         lat: 59.78,
         lng: 10.6
     },
+    // The opacity of the layer
     opacity: 0.25
 });
 
